@@ -1,0 +1,1 @@
+This is my project for CSCI 362 at the College of Charleston.  We had to select an open source project and then do unit testing on it.  The project we selected was snort.  We created a framework and test cases for it.  We all did a little of everything, but I took the lead on creating the test cases.
