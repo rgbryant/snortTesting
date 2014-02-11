@@ -1,0 +1,14 @@
+testnumber|502
+requirement|Returns if the function was able to copy a string.  0 = SNORT_STRNCPY_SUCCESS, 1 = SNORT_STRNCPY_TRUNCATION, -1 = SNORT_STRNCPY_ERROR.
+component|util.c
+method|SnortStrncpy
+testinputs|dst,"Hello",9
+oracle|0
+outputtype|int
+~DEPENDENCIES~
+#include <string.h>
+#define SNORT_STRNCPY_SUCCESS 0
+#define SNORT_STRNCPY_TRUNCATION 1
+#define SNORT_STRNCPY_ERROR -1
+
+char dst[9];

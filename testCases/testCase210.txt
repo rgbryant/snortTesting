@@ -1,0 +1,10 @@
+testnumber|210
+requirement|Returns the length of a null terminated string in the argument or SNORT_STRNLEN_ERROR / -1 if not null terminated.
+component|util.c
+method|SnortStrnlen
+testinputs|"a",2
+oracle|1
+linenumber|1682-1699
+outputtype|int
+~DEPENDENCIES~
+#define SNORT_STRNLEN_ERROR -1

@@ -1,0 +1,10 @@
+testnumber|111
+requirement|Does not compile if the correct parameters are not passed in.
+component|util.c
+method|CalcPct
+testinputs| ,1
+oracle|DNC
+linenumber|139-155
+outputtype|double
+~DEPENDENCIES~
+#include <cstdint>

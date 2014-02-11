@@ -1,0 +1,98 @@
+body
+{
+	background:url('../img/back.jpg');
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	min-width: 1124px;
+}
+.main
+{
+	width: 80%;
+	margin-left: 10%;
+}
+.headercontainer
+{
+	width: 80%;
+	margin-left: 10%;
+	margin-bottom: 15px;
+}
+.header
+{
+	height: 60px;
+	padding-top: 20px;
+	padding-bottom: 24px;
+	margin-right: .4%;
+	font-weight: bold;
+	color:#000000;
+	text-align: center;
+	font-size: 30px;
+	font-family: 'Allerta', sans-serif;
+	float: center;
+	background:url('../img/backb.jpg');
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	outline: #202030 solid thin;
+}
+.cell
+{
+	width: 16.2%;
+	margin: 0.2%;
+	float: left;
+	background:url('../img/backb.jpg');
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	outline: #202030 solid thin;
+	overflow: hidden;
+	text-overflow: ellipses;
+}
+.hcolumn
+{
+	height: 45px;
+	margin-top: 15px;
+	font-weight:bold;
+	color:#000000;
+	text-align: center;
+	font-size: 1.65em;
+	font-family: 'Allerta', sans-serif;
+}
+.dcolumn
+{
+	height: 30px;
+	color:#000000;
+	text-align: center;
+	font-size: 25px;
+	font-family: 'Allerta', sans-serif;
+}
+.pcolumn
+{
+	height: 30px;
+	color:#000000;
+	text-align: center;
+	font-size: 25px;
+	font-family: 'Allerta', sans-serif;
+	background-color: rgba(59, 235, 69, 0.25)
+}
+.fcolumn
+{
+	height: 30px;
+	color:#000000;
+	text-align: center;
+	font-size: 25px;
+	font-family: 'Allerta', sans-serif;
+
+}

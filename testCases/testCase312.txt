@@ -1,0 +1,10 @@
+testnumber|312
+requirement|Returns the correct offset between gmt and local for the epoch (00:00:00, Jan 1, 1970).
+component|util.c
+method|gmt2local
+testinputs|0
+oracle|-18000
+linenumber|279-315
+outputtype|int
+~DEPENDENCIES~
+#include <time.h>

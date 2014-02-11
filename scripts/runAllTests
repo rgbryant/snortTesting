@@ -1,0 +1,179 @@
+#!/usr/bin/python
+import commands
+import sys
+
+#TestCase File Keywords
+testCaseKeyword = "testCase"
+componentKeyword = "component"
+methodKeyword = "method"
+outputtypeKeyword = "outputtype"
+testinputsKeyword = "testinputs"
+requirementKeyword = "requirement"
+oracleKeyword = "oracle"
+linenumberKeyword = "linenumber"
+dependenciesKeyword = "~DEPENDENCIES~\n"
+outputKeyword = "~OUTPUT~\n"
+
+#Check for the current directory and work relative to it.
+rootDirectory = commands.getstatusoutput('pwd')[1].split('/')
+if(rootDirectory[len(rootDirectory)-1] == "scripts"):
+	relativePath = ".."
+elif(rootDirectory[len(rootDirectory)-1] == "IntTeamEquals4_TESTING"):
+	relativePath = "."
+else:
+	print("Run the test script from either the testing root or scripts directory.")
+	sys.exit(1)
+
+#Check for g++ and prompt for it's installation
+if(commands.getstatusoutput('g++ -v')[0] != 0):
+	print("g++ is not installed or is not in the PATH.")
+	sys.exit(1)
+
+#Clean out files and folders to be replaced.
+commands.getoutput('rm '+relativePath+'/temp/*')
+commands.getoutput('rm '+relativePath+'/testCasesExecutables/*')
+commands.getoutput('rm -r '+relativePath+'/reports/*')
+
+#Retrieve a list of files in testCases and index only files with testCase in the name by number.
+List = commands.getoutput('ls '+relativePath+'/testCases/')
+List = List.split("\n")
+unOrderedList = {}
+for line in List:
+	if(line.find(testCaseKeyword) != -1):
+		unOrderedList[eval(line.split(testCaseKeyword)[1].split(".")[0])-1] = line
+
+#Sort and rebuild a list of testCases to parse.
+listOfKeys = unOrderedList.keys()
+listOfKeys.sort()
+orderedList = []
+for key in listOfKeys:
+	orderedList.append(unOrderedList[key])
+
+#Prepare code for the html report.
+hColumn = '<div class = "cell">\n<div class = "hcolumn">'
+hColumnCl = '</div>\n</div>\n'
+column = '<div class = "cell">\n<div class="dcolumn">\n'
+tcolumn = '<div class = "cell">\n<div class="dcolumn" data-ot="Requirement: \n'
+columnCl = '</div></div>\n'
+pColumn = '<div class = "cell">\n<div class = "pcolumn">\n'
+pColumnCl = '</div></div>\n'
+fColumn = '<div class = "cell">\n<div class = "fcolumn">\n'
+fColumnCl = '</div></div>\n'
+outputReport = '<!DOCTYPE html>\n<html>\n<head>\n<meta charset = "UTF-8">\n<title>Testing Snort</title><link href="css/style.css" rel ="stylesheet">'
+outputReport+= '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>'
+outputReport+= '<script src="js/app.js"></script><script src="js/opentip-jquery.js"></script>'
+outputReport+= '<link rel="stylesheet" href="css/opentip.css">\n</head>\n<body>\n'
+outputReport += '<div class = "headercontainer">\n<div class = "header">\n<img src="img/logo.png" alt="int team = 4;"></img>\n</div>\n</div>\n<div class = "main">\n'
+outputReport +=	hColumn + "Test Case" + hColumnCl
+outputReport += hColumn + "Method" + hColumnCl
+outputReport += hColumn + "Inputs" + hColumnCl
+outputReport += hColumn + "Oracle" + hColumnCl
+outputReport += hColumn + "Output" + hColumnCl
+outputReport += hColumn + "Results" + hColumnCl
+
+#Search for the function based upon it's name and return type. This avoids using number lines.
+def findFunctionInFile(fileString, functionName, returnType):
+	#Find the function name.
+	for i in range(len(fileString)):
+		if(-1 != fileString[i].replace(" ","").replace("\t","").find(returnType+functionName)):
+			start = i
+	#Count braces after finding the first one, and return the line numbers.
+	first = True
+	countBraces = 0
+	found = False
+	for i in range(start,len(fileString)):
+		for char in fileString[i]:
+			if(countBraces <= 0 and not first):
+				end = i
+				found = True
+				break
+			if(char == '{'):
+				if(first):
+					first = False
+					countBraces += 1
+				else:
+					countBraces += 1
+			elif(char == '}'):
+				countBraces -= 1
+		if(found):
+			break
+	return (start+1, end+1)
+
+#Iterate through each test case.
+for test in orderedList:
+	#Open and read the test case file.
+	File = open(relativePath+"/testCases/"+test,"r")
+	fileText = File.read()
+	File.close()
+	#Split the test case around the dependencies keyword.
+	fileList = fileText.split(dependenciesKeyword);
+	#Build a new string from the second part of the list.
+	dependenciesList = [fileList[1]]
+	dependenciesString = ""
+	for line in dependenciesList:
+		dependenciesString += line
+	#Split the new list on the output keyword.
+	dependenciesList = dependenciesString.split(outputKeyword)
+	#Build a dictionary of the data in the testCase to use.
+	fileLines = fileList[0].split("\n")
+	Dictionary = {}
+	for fileLine in fileLines:
+		currentLine = fileLine.split("|")
+		if(len(currentLine) == 2):
+			Dictionary[currentLine[0]] = currentLine[1]
+
+	#Open the file to be tested.
+	cppFile = open(relativePath+"/project/src/"+Dictionary[componentKeyword],"r")
+	cppFileText = cppFile.readlines()
+	#Find the line numbers and retrieve the text.
+	lineNumbers = findFunctionInFile(cppFileText,Dictionary[methodKeyword],Dictionary[outputtypeKeyword])
+	cppFunction = cppFileText[lineNumbers[0]-1:lineNumbers[1]]
+	cppFile.close()
+	templateFile = open(relativePath+"/resources/templateCPP.cpp","r")
+	templateList = templateFile.readlines()
+	templateFile.close()
+	newLine = ["\n"]
+
+	#Build CPP file.
+	outputList = templateList[0:2]+newLine+[dependenciesList[0]]+newLine+cppFunction+newLine+templateList[2:4]
+	if(len(dependenciesList) == 2):
+		outputList = outputList+["\t"+Dictionary[outputtypeKeyword]+" output = "+Dictionary[methodKeyword]+"("+Dictionary[testinputsKeyword]+");\n"]+[dependenciesList[1]]+templateList[5:]
+	else:
+		outputList = outputList+["\t"+Dictionary[outputtypeKeyword]+" output = "+Dictionary[methodKeyword]+"("+Dictionary[testinputsKeyword]+");\n"]+templateList[4:]
+	outputFile = open(relativePath+"/temp/"+test.split('.')[0]+".cpp",'w')
+	for outLine in outputList:
+		outputFile.write(outLine)
+	outputFile.close();
+	#Compile and run CPP file capturing output.
+	compileStatus = commands.getstatusoutput(relativePath+"/scripts/build "+test.split('.')[0]+" "+test.split('.')[0]+".cpp"+" "+relativePath)
+
+	#Build HTML report based on results of compile and run
+	if(compileStatus[0] != 0):
+		if(Dictionary[oracleKeyword] == "DNC"):
+			outputReport += tcolumn + Dictionary[requirementKeyword]+ '">' + test.split('.')[0] + columnCl + column + Dictionary[methodKeyword] + columnCl + column + Dictionary[testinputsKeyword] + columnCl + column
+			outputReport += Dictionary[oracleKeyword] + columnCl + column + "DNC" + columnCl + pColumn + "Pass" + pColumnCl
+		else:
+			outputReport += tcolumn + Dictionary[requirementKeyword]+'">' + test.split('.')[0] + columnCl + column + Dictionary[methodKeyword] + columnCl + column + Dictionary[testinputsKeyword] + columnCl + column
+			outputReport += Dictionary[oracleKeyword] + columnCl + column + "DNC" + columnCl + fColumn + "Fail" + fColumnCl
+	else:
+		if(compileStatus[1] == Dictionary[oracleKeyword]):
+			outputReport += tcolumn + Dictionary[requirementKeyword]+ '">' +test.split('.')[0] + columnCl + column + Dictionary[methodKeyword] + columnCl + column + Dictionary[testinputsKeyword] + columnCl + column 
+			outputReport += Dictionary[oracleKeyword] + columnCl + column + compileStatus[1] + columnCl + pColumn + "Pass" + pColumnCl
+		else:
+			outputReport += tcolumn + Dictionary[requirementKeyword]+ '">' + test.split('.')[0] + columnCl + column + Dictionary[methodKeyword] + columnCl + column + Dictionary[testinputsKeyword] + columnCl + column 
+			outputReport += Dictionary[oracleKeyword] + columnCl + column + compileStatus[1] + columnCl + fColumn + "Fail" + fColumnCl
+
+#Finalize report file and write.
+outputReport += '</div>\n</body>\n</html>'
+resultsFile = open(relativePath+"/reports/results.htm","w")
+resultsFile.write(outputReport)
+resultsFile.close()
+#Copy report resources.
+commands.getoutput('cp -R '+relativePath+'/resources/css '+relativePath+'/reports/')
+commands.getoutput('cp -R '+relativePath+'/resources/img '+relativePath+'/reports/')
+commands.getoutput('cp -R '+relativePath+'/resources/js '+relativePath+'/reports/')
+
+#Firefox was causing trouble if it was still open
+commands.getoutput('pkill firefox')
+#Open report.
+commands.getoutput('xdg-open '+relativePath+'/reports/results.htm')

@@ -1,0 +1,45 @@
+#/bin/sh
+
+case $1 in
+	n)
+		cp ../project/src/util.c.old ../project/src/util.c	
+		echo "Original source code activated."
+		;;
+	N)
+		cp ../project/src/util.c.old ../project/src/util.c	
+		echo "Original source code activated."
+		;;
+	y)
+		cp ../project/src/util.c.faultAll ../project/src/util.c
+		echo "All faults activated."
+		;;
+	Y)
+		cp ../project/src/util.c.faultAll ../project/src/util.c
+		echo "All faults activated."
+		;;
+	1)
+		cp ../project/src/util.c.fault1 ../project/src/util.c
+		echo "Fault #1 activated."
+		;;
+	2)
+		cp ../project/src/util.c.fault2 ../project/src/util.c
+		echo "Fault #2 activated."
+		;;
+	3)
+		cp ../project/src/util.c.fault3 ../project/src/util.c
+		echo "Fault #3 activated."
+		;;
+	4)
+		cp ../project/src/util.c.fault4 ../project/src/util.c
+		echo "Fault #4 activated."
+		;;
+	5)
+		cp ../project/src/util.c.fault5 ../project/src/util.c
+		echo "Fault #5 activated."
+		;;
+	*)
+		echo -e "\nUsage:\nn/N revert to original source code\ny/Y add all faults\n1-5 add fault by number\n" >&2
+		exit 3
+		;;
+esac
+exit 0

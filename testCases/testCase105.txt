@@ -1,0 +1,10 @@
+testnumber|105
+requirement|Returns the percentage of the first argument as a part of the second argument.
+component|util.c
+method|CalcPct
+testinputs|2,1
+oracle|200
+linenumber|139-155
+outputtype|double
+~DEPENDENCIES~
+#include <cstdint>

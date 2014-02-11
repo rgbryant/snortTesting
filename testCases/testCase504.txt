@@ -1,0 +1,14 @@
+testnumber|504
+requirement|Does not compile if the correct parameters are not passed in.
+component|util.c
+method|SnortStrncpy
+testinputs|dst,9
+oracle|DNC
+outputtype|int
+~DEPENDENCIES~
+#include <string.h>
+#define SNORT_STRNCPY_SUCCESS 0
+#define SNORT_STRNCPY_TRUNCATION 1
+#define SNORT_STRNCPY_ERROR -1
+
+char dst[9];

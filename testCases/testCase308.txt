@@ -1,0 +1,10 @@
+testnumber|308
+requirement|Returns the correct offset between gmt and local in unix time.s
+component|util.c
+method|gmt2local
+testinputs|15897600
+oracle|-14400
+linenumber|279-315
+outputtype|int
+~DEPENDENCIES~
+#include <time.h>

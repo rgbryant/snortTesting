@@ -1,0 +1,17 @@
+testnumber|405
+requirement|Returns a flat string from an array of strings.
+component|util.c
+method|copy_argv
+testinputs|input
+oracle|a 
+linenumber|320-376
+outputtype|char*
+~DEPENDENCIES~
+#include <string.h>
+
+char *input[3] = {"a",""};
+
+int FatalError(const char *format,...){
+	exit(1);
+return 0;
+}

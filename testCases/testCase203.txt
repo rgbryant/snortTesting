@@ -1,0 +1,10 @@
+testnumber|203
+requirement|Does not compile if the correct parameters are not passed in.
+component|util.c
+method|SnortStrnlen
+testinputs|'a',NULL
+oracle|DNC
+linenumber|1682-1699
+outputtype|int
+~DEPENDENCIES~
+#define SNORT_STRNLEN_ERROR -1

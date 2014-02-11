@@ -1,0 +1,10 @@
+testnumber|301
+requirement|Returns the correct offset between gmt and local for the current time if it is standard time.
+component|util.c
+method|gmt2local
+testinputs|0
+oracle|-18000
+linenumber|279-315
+outputtype|int
+~DEPENDENCIES~
+#include <time.h>

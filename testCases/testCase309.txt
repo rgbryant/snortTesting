@@ -1,0 +1,10 @@
+testnumber|309
+requirement|Returns the correct offset between gmt and local in unix time when the current time is during daylight savings time.
+component|util.c
+method|gmt2local
+testinputs|0
+oracle|-14400
+linenumber|279-315
+outputtype|int
+~DEPENDENCIES~
+#include <time.h>

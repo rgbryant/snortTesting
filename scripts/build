@@ -1,0 +1,6 @@
+#!/bin/bash
+cd $3/temp
+rm $1 2> /dev/null
+echo -e "\n"$1"\n--------------------\n" >> buildlog
+g++ -std=c++0x -o "../testCasesExecutables/"$1 $2 2>> buildlog
+../testCasesExecutables/$1
